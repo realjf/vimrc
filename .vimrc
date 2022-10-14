@@ -10,7 +10,8 @@ filetype plugin indent on
 set title
 set number
 set ts=4 sts=4 sw=4 et ai si
-set rnu " set relativenumber
+" set relativenumber
+" set rnu
 set nu " set number
 
 " Some servers have issues with backup files, see #649.
@@ -74,20 +75,7 @@ call plug#end()
 call glaive#Install()
 " Optional: Enable codefmt's default mappings on the <Leader>= prefix.
 Glaive codefmt plugin[mappings]
-Glaive codefmt google_java_executable="java -jar /usr/share/java/google-java-format-VERSION-all-deps.jar"
-
-" Exit Vim if NERDTree is the only window remaining in the only tab.
-autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
-
-" Close the tab if NERDTree is the only window remaining in it.
-autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
-
-" If another buffer tries to replace NERDTree, put it in the other window, and bring back NERDTree.
-autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
-    \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
-    
-" Open the existing NERDTree on each new tab.
-autocmd BufWinEnter * if getcmdwintype() == '' | silent NERDTreeMirror | endif
+Glaive codefmt google_java_executable="java -jar /usr/share/java/google-java-format-1.15.0-all-deps.jar"
 
 
 " choose theme
@@ -160,9 +148,6 @@ function! ShowDocumentation()
   endif
 endfunction
 
-" Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
 
@@ -171,8 +156,6 @@ xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
 
 
-" Start NERDTree and leave the cursor in it.
-autocmd VimEnter * NERDTree
 set encoding=UTF-8
 set guifont=DroidSansMono\ Nerd\ Font\ 11
 let g:airline_powerline_fonts = 1
@@ -202,6 +185,8 @@ let g:NERDTreeGitStatusConcealBrackets = 0 " default: 0
 " 自动格式化文件                                                                                                        
 augroup autoformat_settings
   autocmd!
+  " Start NERDTree and leave the cursor in it.
+  autocmd VimEnter * NERDTree
   " Setup formatexpr specified filetype(s).
   autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
   " Update signature help on jump placeholder.
@@ -218,6 +203,20 @@ augroup autoformat_settings
   autocmd FileType rust AutoFormatBuffer rustfmt
   autocmd FileType vue AutoFormatBuffer prettier
   autocmd FileType swift AutoFormatBuffer swift-format
+  " Highlight the symbol and its references when holding the cursor.
+  autocmd CursorHold * silent call CocActionAsync('highlight')
+  " Exit Vim if NERDTree is the only window remaining in the only tab.
+  autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+
+  " Close the tab if NERDTree is the only window remaining in it.
+  autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+
+  " If another buffer tries to replace NERDTree, put it in the other window, and bring back NERDTree.
+  autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
+    \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
+    
+  " Open the existing NERDTree on each new tab.
+  autocmd BufWinEnter * if getcmdwintype() == '' | silent NERDTreeMirror | endif
 augroup END
 
 " Applying codeAction to the selected region.
@@ -275,5 +274,5 @@ let g:go_highlight_generate_tags = 1
 xmap ga <Plug>(EasyAlign)
 
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
-nmap ga <Plug>(EasyAlign)
+nmap ga <Plug>(EasyAlign)          
 
