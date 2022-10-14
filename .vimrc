@@ -128,11 +128,26 @@ Glaive codefmt plugin[mappings]
 Glaive codefmt google_java_executable="java -jar /usr/share/java/google-java-format-1.15.0-all-deps.jar"
 
 
-" choose theme
+" ----------------------------------------------------------------------------
+" choose theme and font
+" ----------------------------------------------------------------------------
+
 set termguicolors
-colo gruvbox
+colorscheme gruvbox
 set guifont=DroidSansMono\ Nerd\ Font\ 11
 let g:airline_powerline_fonts = 1
+
+" Highlight line under cursor
+set cursorline
+set cursorcolumn
+
+
+" Show the line and column number of the cursor position
+set ruler
+
+" ----------------------------------------------------------------------------
+" choose theme and font
+" ----------------------------------------------------------------------------
 
 
 function! ToggleFullscreen()
@@ -142,13 +157,6 @@ endfunction
 map <silent> <F11> :call ToggleFullscreen()<CR>
 imap <silent> <F11> <esc>:call ToggleFullscreen()<CR>
 " autocmd VimEnter * call ToggleFullscreen()
-
-" Show the line and column number of the cursor position
-set ruler
-
-" Highlight line under cursor
-set cursorline
-set cursorcolumn
 
 
 " ----------------------------------------------------------------------------
@@ -541,6 +549,20 @@ let g:go_highlight_operators = 1
 let g:go_highlight_extra_types = 1
 let g:go_highlight_build_constraints = 1
 let g:go_highlight_generate_tags = 1
+
+" Show the function signature for a given routine with \ + i
+autocmd BufEnter *.go nmap <leader>i  <Plug>(go-info)
+" Show the interfaces a type implements with \ + ii
+autocmd BufEnter *.go nmap <leader>ii  <Plug>(go-implements)
+" Describe the definition of a given type with \ + ci
+autocmd BufEnter *.go nmap <leader>ci  <Plug>(go-describe)
+" See the callers of a given function with \ + cc
+autocmd BufEnter *.go nmap <leader>cc  <Plug>(go-callers)
+" Find all references of a given type/function in the codebase with \ + cr
+nmap <leader>cr <Plug>(coc-references)
+" Go to definition/Go back with Ctrl+d and Ctrl+a
+nmap <C-a> <C-o>
+nmap <C-d> <Plug>(coc-definition)
 
 
 " ----------------------------------------------------------------------------
