@@ -175,7 +175,7 @@ nmap <leader>f  <Plug>(coc-format-selected)
 autocmd VimEnter * NERDTree
 set encoding=UTF-8
 set guifont=DroidSansMono\ Nerd\ Font\ 11
-set g:airline_powerline_fonts = 1
+let g:airline_powerline_fonts = 1
 
 set autochdir
 
