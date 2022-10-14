@@ -1,5 +1,5 @@
 # vimrc
 
 ```sh
-curl -fLo ~/.vimrc https://github.com/realjf/vimrc/blob/master/.vimrc
+curl -fLo ~/.vimrc https://raw.githubusercontent.com/realjf/vimrc/master/.vimrc
 ```
