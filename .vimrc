@@ -65,7 +65,7 @@ Plug 'morhetz/gruvbox'
 Plug 'matze/vim-move'
 Plug 'scrooloose/nerdcommenter'
 Plug 'derekwyatt/vim-protodef', { 'for': ['c', 'cpp', 'objc'] }
-" Plug 'gcmt/wildfire.vim'
+Plug 'gcmt/wildfire.vim'
 Plug 'jiangmiao/auto-pairs'
 Plug 'godlygeek/tabular'
 Plug 'preservim/vim-markdown'
@@ -80,10 +80,10 @@ Plug 'junegunn/vim-easy-align'
 Plug 'preservim/nerdtree'
 Plug 'ctrlpvim/ctrlp.vim' " fuzzy find files
 Plug 'tpope/vim-fugitive' " help switching between companion files (e.g. '.h' and '.cpp' files)
-Plug 'tpope/vim-fugitive'
 Plug 'dyng/ctrlsf.vim'
 Plug 'PhilRunninger/nerdtree-visual-selection'
 Plug 'christoomey/vim-tmux-navigator'
+Plug 'fholgado/minibufexpl.vim'
 
 
 " View
@@ -129,6 +129,26 @@ Glaive codefmt google_java_executable="java -jar /usr/share/java/google-java-for
 
 
 " ----------------------------------------------------------------------------
+" mappings，具体可见:https://learnvimscriptthehardway.stevelosh.com/chapters/05.html
+" ----------------------------------------------------------------------------
+let mapleader=',' " 设置<leader>为,
+" <leader>是mapleader的表示方式，这意味着您可以选择一个您不关心的键（如 -）作为“前缀”键并在其上创建映射。这意味着您必须键入一个额外的键来激活映射，但是一个额外的击键很容易被肌肉记忆吸收
+" let maplocalleader='\\' " 设置<localleader>为\
+"
+" map: 基础映射快捷键, map命令使按键在正常模式下工作
+"
+" nmap,vmap,imap: 模态映射快捷键, 这些告诉 Vim 只在正常、可视或插入模式下使用映射（递归调用映射）
+" vnoremap,inoremap,nnoremap: 非递归映射模态下快捷键
+" 
+" nunmap <快捷键> : 删除快捷键
+" 
+" <esc>
+" <nop>: 设置为空
+" <silent>: 不输出在命令行中
+" 
+
+
+" ----------------------------------------------------------------------------
 " choose theme and font
 " ----------------------------------------------------------------------------
 
@@ -162,7 +182,7 @@ imap <silent> <F11> <esc>:call ToggleFullscreen()<CR>
 " ----------------------------------------------------------------------------
 " Basic mappings
 " ----------------------------------------------------------------------------
-
+" <leader>默认是\，<cr>是回车
 " Edit myvimrc
 nnoremap <leader>ev :vsplit $MYVIMRC<cr>
 nnoremap <leader>sv :source $MYVIMRC<cr>
@@ -243,7 +263,7 @@ let g:move_key_modifier = 'C'
 
 " <S-k>   Move currently selected block up
 " <S-j>   Move currently selected block down
-let g:move_key_modifier_visualmode = 'S'
+" let g:move_key_modifier_visualmode = 'S'
 
 " ----------------------------------------------------------------------------
 " auto-pairs
