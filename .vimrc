@@ -74,6 +74,13 @@ Plug 'instant-markdown/vim-instant-markdown', {'for': 'markdown', 'do': 'yarn in
 " SirVer/ultisnips
 Plug 'junegunn/vim-easy-align'
 " Plug 'prettier/vim-prettier', {'do': 'yarn install'}
+Plug 'rhysd/git-messenger.vim'
+
+
+" Buffer
+Plug 'vim-airline/vim-airline'
+" Plug 'fholgado/minibufexpl.vim'
+Plug 'jlanzarotta/bufexplorer'
 
 
 " Navigation
@@ -83,13 +90,12 @@ Plug 'tpope/vim-fugitive' " help switching between companion files (e.g. '.h' an
 Plug 'dyng/ctrlsf.vim'
 Plug 'PhilRunninger/nerdtree-visual-selection'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'fholgado/minibufexpl.vim'
+
 
 
 " View
 Plug 'airblade/vim-gitgutter'
 Plug 'Xuyuanp/nerdtree-git-plugin' " A plugin of NERDTree showing git status flags
-Plug 'vim-airline/vim-airline' 
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'ryanoasis/vim-devicons'
 Plug 'PhilRunninger/nerdtree-buffer-ops' " 突出显示打开的节点
@@ -165,18 +171,8 @@ set cursorcolumn
 " Show the line and column number of the cursor position
 set ruler
 
-" ----------------------------------------------------------------------------
-" choose theme and font
-" ----------------------------------------------------------------------------
 
 
-function! ToggleFullscreen()
-call system("wmctrl -ir " . v:windowid . " -b toggle,fullscreen")
-endfunction
-
-map <silent> <F11> :call ToggleFullscreen()<CR>
-imap <silent> <F11> <esc>:call ToggleFullscreen()<CR>
-" autocmd VimEnter * call ToggleFullscreen()
 
 
 " ----------------------------------------------------------------------------
@@ -219,6 +215,8 @@ nnoremap ^ <nop>
 " Use K to show documentation in preview window.
 nnoremap <silent> K :call ShowDocumentation()<CR>
 
+
+" fullscreen
 function! ShowDocumentation()
   if CocAction('hasProvider', 'hover')
     call CocActionAsync('doHover')
@@ -226,6 +224,42 @@ function! ShowDocumentation()
     call feedkeys('K', 'in')
   endif
 endfunction
+
+function! ToggleFullscreen()
+call system("wmctrl -ir " . v:windowid . " -b toggle,fullscreen")
+endfunction
+
+map <silent> <F11> :call ToggleFullscreen()<CR>
+imap <silent> <F11> <esc>:call ToggleFullscreen()<CR>
+" autocmd VimEnter * call ToggleFullscreen()
+
+
+
+" ----------------------------------------------------------------------------
+" window split
+" ----------------------------------------------------------------------------
+" split resize
+nnoremap <silent> <Leader>+ :exe "resize " . (winheight(0) * 11/10)<CR>
+nnoremap <silent> <Leader>- :exe "resize " . (winheight(0) * 1/10)<CR>
+nnoremap <silent> <Leader>[ :exe "vertical resize " . (winwidth(0) * 11/10)<CR>
+nnoremap <silent> <Leader>] :exe "vertical resize " . (winwidth(0) * 1/10)<CR>
+
+" Splits Movement
+nnoremap <silent> <Leader>wr <C-w>r<CR> " rotate to the right
+nnoremap <silent> <Leader>wH <C-w>H<CR> " move to the left
+nnoremap <silent> <Leader>wJ <C-w>J<CR> " move to the bottom
+nnoremap <silent> <Leader>wK <C-w>K<CR> " move to the top
+nnoremap <silent> <Leader>wL <C-w>L<CR> " move to the right
+nnoremap <silent> <Leader>wT <C-w>T<CR> " (`:tab split`) move split to new tab
+
+
+" Close Split
+nmap <silent> <Leader>wc :close<CR> " close split
+nmap <silent> <Leader>wq :q<CR> " close split and quit file
+nmap <silent> <Leader>wo :only<CR> " close all other splits
+
+
+
 
 " ----------------------------------------------------------------------------
 " Quickfix
@@ -303,6 +337,45 @@ let g:disable_protodef_sorting=1
 " nerdcommenter
 " ----------------------------------------------------------------------------
 
+
+
+
+" ----------------------------------------------------------------------------
+" git-messenger
+" ----------------------------------------------------------------------------
+
+nmap <Leader>gm <Plug>(git-messenger)
+let g:git_messenger_include_diff="all"
+let g:git_messenger_always_into_popup=v:true
+let g:git_messenger_preview_mods="botright"
+
+" Normal color in popup window with 'CursorLine'
+hi link gitmessengerPopupNormal CursorLine
+
+" Header such as 'Commit:', 'Author:' with 'Statement' highlight group
+hi link gitmessengerHeader Statement
+
+" Commit hash at 'Commit:' header with 'Special' highlight group
+hi link gitmessengerHash Special
+
+" History number at 'History:' header with 'Title' highlight group
+hi link gitmessengerHistory Title
+
+
+
+function! s:setup_git_messenger_popup() abort
+    " Your favorite configuration here
+
+    " For example, set go back/forward history to <C-o>/<C-i>
+    nmap <buffer><C-o> o
+    nmap <buffer><C-i> O
+endfunction
+autocmd FileType gitmessengerpopup call <SID>setup_git_messenger_popup()
+
+let g:git_messenger_floating_win_opts = { 'border': 'single' }
+let g:git_messenger_popup_content_margins = v:false
+
+
 " ----------------------------------------------------------------------------
 " nerdtree
 " ----------------------------------------------------------------------------
@@ -366,6 +439,37 @@ nnoremap <Leader>md :InstantMarkdownPreview<CR>
 " ----------------------------------------------------------------------------
 " vim-fugitive
 " ----------------------------------------------------------------------------
+" :Git add
+" :Git commit
+" :Git rebase -i
+" :Git diff 对比文件
+" :Git log 查看git日志
+" :Git --paginate,:Git -p
+" :Git blame 使用带有地图的临时缓冲区进行额外的分类
+" :Git mergetool 将他们的变更集加载到快速修复列表中
+" :Git difftool 将他们的变更集加载到快速修复列表中
+" 
+"
+"
+
+" ----------------------------------------------------------------------------
+" vimdiff
+" ----------------------------------------------------------------------------
+" do 从其他窗口获取更改到当前窗口
+" dp 将当前窗口的更改放入另一个窗口
+" ]c 跳转到后一个修改
+" [c 跳转到前一个修改
+" zo 打开目录
+" zc 关闭目录
+" zr 降低折叠水平
+" zm 请再折叠一层
+" :diffupdate,:diffu 重新计算差异
+" :diffg RE 从REMOTE获取文件对比
+" :diffg BA 从BASE获取文件对比
+" :diffg LO 从LOCAL获取文件对比
+"
+"
+"
 
 
 " ----------------------------------------------------------------------------
@@ -374,21 +478,97 @@ nnoremap <Leader>md :InstantMarkdownPreview<CR>
 
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 " delays and poor user experience.
-set updatetime=250
+set updatetime=100
 
 " Always show the signcolumn, otherwise it would shift the text each time
 " diagnostics appear/become resolved.
 set signcolumn=yes
 
+
+let g:gitgutter_terminal_reports_focus=1
+
+" This path probably won't work
+let g:gitgutter_git_executable = '/usr/bin/git'
+
+function! GitStatus()
+  let [a,m,r] = GitGutterGetHunkSummary()
+  return printf('+%d ~%d -%d', a, m, r)
+endfunction
+set statusline+=%{GitStatus()}
+
+let g:gitgutter_max_signs = 500  " default value (Vim < 8.1.0614, Neovim < 0.4.0)
+let g:gitgutter_max_signs = -1   " default value (otherwise)
+let g:gitgutter_highlight_lines = 1
+let g:gitgutter_highlight_linenrs = 1
+
+nmap ]h <Plug>(GitGutterNextHunk)
+nmap [h <Plug>(GitGutterPrevHunk)
+
+command! Gqf GitGutterQuickFix | copen
+
+set foldtext=gitgutter#fold#foldtext()
+
+
+highlight GitGutterAdd    guifg=#009900 ctermfg=2
+highlight GitGutterChange guifg=#bbbb00 ctermfg=3
+highlight GitGutterDelete guifg=#ff2222 ctermfg=1
+
+
+
+" ----------------------------------------------------------------------------
+" bufexplorer
+" ----------------------------------------------------------------------------
+
+
+
+
+
 " ----------------------------------------------------------------------------
 " minibufexpl
 " ----------------------------------------------------------------------------
 
-inoremap <F4> <esc>:MBEToggle<cr>
-nnoremap <F4> :MBEToggle<cr>
+" inoremap <F4> <esc>:MBEToggle<cr>
+" nnoremap <F4> :MBEToggle<cr>
 
-nnoremap ]b :bnext<cr>
-nnoremap [b :bprev<cr>
+
+" nnoremap ]b :bnext<cr>
+" nnoremap [b :bprev<cr>
+
+
+" MiniBufExpl Colors
+" hi MBENormal               guifg=#808080 guibg=fg
+" hi MBEChanged              guifg=#CD5907 guibg=fg
+" hi MBEVisibleNormal        guifg=#5DC2D6 guibg=fg
+" hi MBEVisibleChanged       guifg=#F1266F guibg=fg
+" hi MBEVisibleActiveNormal  guifg=#A6DB29 guibg=fg
+" hi MBEVisibleActiveChanged guifg=#F1266F guibg=fg
+
+"
+"delete the buffer; keep windows
+"
+"function Kwbd(kwbdStage)
+"    if(a:kwbdStage == 1)
+"        let g:kwbdBufNum = bufnr("%")
+"        let g:kwbdWinNum = winnr()
+"        windo call Kwbd(2)
+"        execute "bd! " . g:kwbdBufNum
+"        execute "normal " . g:kwbdWinNum . ""
+"    else
+"        if(bufnr("%") == g:kwbdBufNum)
+"            let prevbufvar = bufnr("#")
+"            if(prevbufvar > 0 && buflisted(prevbufvar) && prevbufvar != g:kwbdBufNum)
+"                b #
+"            else
+"                bn
+"            endif
+"        endif
+"    endif
+" endfunction
+
+" close buffer
+" imap <S-F4> <Esc>:call Kwbd(1)<CR>
+" nmap <S-F4> :call Kwbd(1)<CR>
+
 
 " ----------------------------------------------------------------------------
 " ctrlsf.vim
@@ -507,7 +687,8 @@ command! -nargs=0 OR   :call     CocActionAsync('runCommand', 'editor.action.org
 augroup autoformat_settings
   autocmd!
   " Start NERDTree and leave the cursor in it.
-  autocmd VimEnter * NERDTree
+  " autocmd VimEnter * NERDTree
+  
   " Setup formatexpr specified filetype(s).
   autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
   " Update signature help on jump placeholder.
@@ -526,8 +707,9 @@ augroup autoformat_settings
   autocmd FileType swift AutoFormatBuffer swift-format
   " Highlight the symbol and its references when holding the cursor.
   autocmd CursorHold * silent call CocActionAsync('highlight')
+  
   " Exit Vim if NERDTree is the only window remaining in the only tab.
-  autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
+  " autocmd BufEnter * if tabpagenr('$') == 1 && winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
 
   " Close the tab if NERDTree is the only window remaining in it.
   autocmd BufEnter * if winnr('$') == 1 && exists('b:NERDTree') && b:NERDTree.isTabTree() | quit | endif
@@ -537,7 +719,7 @@ augroup autoformat_settings
     \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
     
   " Open the existing NERDTree on each new tab.
-  autocmd BufWinEnter * if getcmdwintype() == '' | silent NERDTreeMirror | endif
+  " autocmd BufWinEnter * if getcmdwintype() == '' | silent NERDTreeMirror | endif
 augroup END
 
 
